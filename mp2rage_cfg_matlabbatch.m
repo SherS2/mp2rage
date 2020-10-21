@@ -79,6 +79,23 @@ rmbg_regularization.num     = [1 1]; % only a scalar
 rmbg_regularization.def     = @(val) mp2rage_get_defaults('rmbg.regularization', val{:});
 
 %--------------------------------------------------------------------------
+% rmbg_smooth
+%--------------------------------------------------------------------------
+rmbg_smooth         = cfg_entry;
+rmbg_smooth.tag     = 'smooth';
+rmbg_smooth.name    = 'smooth factor';
+rmbg_smooth.help    = {
+    'smooth factor'
+    'To test the smooth'
+    ''
+    'scalar : natural number (1..n)'
+    ''
+    };
+rmbg_smooth.strtype = 'n';   % natural number (1..n)
+rmbg_smooth.num     = [1 1]; % only a scalar
+rmbg_smooth.def     = @(val) mp2rage_get_defaults('rmbg.smooth', val{:});
+
+%--------------------------------------------------------------------------
 % rmbg_show
 %--------------------------------------------------------------------------
 rmbg_show        = cfg_menu;
@@ -109,7 +126,7 @@ rmbg.help = {
     'http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099676'
     ''
     };
-rmbg.val  = { rmbg_INV1 rmbg_INV2 rmbg_UNI rmbg_regularization rmbg_output rmbg_show };
+rmbg.val  = { rmbg_INV1 rmbg_INV2 rmbg_UNI rmbg_regularization rmbg_smooth rmbg_output rmbg_show };
 rmbg.prog = @prog_rmbg;
 rmbg.vout = @vout_rmbg;
 

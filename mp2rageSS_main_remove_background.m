@@ -1,4 +1,4 @@
-function mp2rage_main_remove_background(rmbg)
+function mp2rageSS_main_remove_background(rmbg)
 %MP2RAGE_MAIN_REMOVE_BACKGROUND Executable job that removes background noise for mp2rage UNI image.
 %
 % The core code of this function is an implementation of https://github.com/JosePMarques/MP2RAGE-related-scripts/blob/master/func/RobustCombination.m
@@ -37,7 +37,8 @@ spm_write_vol(V_temp,Y_erode);
 
 mask_name = strrep(V_temp.fname,'thresh_erode_dilate.nii','mask.nii');
 
-spm_smooth(V_temp.fname,mask_name,[6 6 6]);
+% smoothing
+spm_smooth(V_temp.fname,mask_name,[rmbg.smooth rmbg.smooth rmbg.smooth]);
  
 V_mask  =   spm_vol(mask_name);
 Y_mask  =   double(spm_read_vols(V_mask));

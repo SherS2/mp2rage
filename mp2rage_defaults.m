@@ -9,6 +9,7 @@ function mp = mp2rage_defaults
 % Remove background / Interactive background
 %==========================================================================
 mp.rmbg.regularization  = 1;
+mp.rmbg.smooth          = 4;
 mp.rmbg.output.prefix   = 'clean_';
 mp.rmbg.output.filename = 'clean_UNI';
 
