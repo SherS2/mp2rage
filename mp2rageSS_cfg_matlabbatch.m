@@ -1,4 +1,4 @@
-function mp2rage = mp2rage_cfg_matlabbatch
+function mp2rageSS = mp2rageSS_cfg_matlabbatch
 %MP2RAGE_CFG_MATLABBATCH is the configurarion file for all jobs of the mp2rage branch
 % This file is executed by spm job/batch system
 %
@@ -74,9 +74,9 @@ rmbg_regularization.help    = {
     'scalar : natural number (1..n)'
     ''
     };
-rmbg_regularization.strtype = 'n';   % natural number (1..n)
+rmbg_regularization.strtype = 'n';   % natural number (0 1..n)
 rmbg_regularization.num     = [1 1]; % only a scalar
-rmbg_regularization.def     = @(val) mp2rage_get_defaults('rmbg.regularization', val{:});
+rmbg_regularization.def     = @(val) mp2rageSS_get_defaults('rmbg.regularization', val{:});
 
 %--------------------------------------------------------------------------
 % rmbg_smooth
@@ -88,12 +88,12 @@ rmbg_smooth.help    = {
     'smooth factor'
     'To test the smooth'
     ''
-    'scalar : natural number (1..n)'
+    'scalar : whole number (0 1..n)'
     ''
     };
-rmbg_smooth.strtype = 'n';   % natural number (1..n)
+rmbg_smooth.strtype = 'w';   % whole number (0 1..n)
 rmbg_smooth.num     = [1 1]; % only a scalar
-rmbg_smooth.def     = @(val) mp2rage_get_defaults('rmbg.smooth', val{:});
+rmbg_smooth.def     = @(val) mp2rageSS_get_defaults('rmbg.smooth', val{:});
 
 %--------------------------------------------------------------------------
 % rmbg_show
@@ -113,7 +113,7 @@ rmbg_show.help   = {
 %--------------------------------------------------------------------------
 % rmbg_output
 %--------------------------------------------------------------------------
-rmbg_output = mp2rage_matlabbatch_job_output( 'rmbg.output' );
+rmbg_output = mp2rageSS_matlabbatch_job_output( 'rmbg.output' );
 
 %--------------------------------------------------------------------------
 % rmbg
@@ -283,12 +283,12 @@ estimateT1_fatsat.help   = {
 %--------------------------------------------------------------------------
 % estimateT1_outputT1
 %--------------------------------------------------------------------------
-estimateT1_outputT1 = mp2rage_matlabbatch_job_output( 'estimateT1.outputT1', 'T1' );
+estimateT1_outputT1 = mp2rageSS_matlabbatch_job_output( 'estimateT1.outputT1', 'T1' );
 
 %--------------------------------------------------------------------------
 % estimateT1_outputR1
 %--------------------------------------------------------------------------
-estimateT1_outputR1 = mp2rage_matlabbatch_job_output( 'estimateT1.outputR1', 'R1' );
+estimateT1_outputR1 = mp2rageSS_matlabbatch_job_output( 'estimateT1.outputR1', 'R1' );
 
 %--------------------------------------------------------------------------
 % estimateT1
@@ -319,13 +319,13 @@ estimateT1.vout = @vout_estimateT1;
 % mp2rage : main
 %--------------------------------------------------------------------------
 % This is the menue on the batch editor : SPM > Tools > MP2RAGE
-mp2rage        = cfg_choice;
-mp2rage.tag    = 'mp2rage_ss';
-mp2rage.name   = 'MP2RAGE_SS';
-mp2rage.help   = {
+mp2rageSS        = cfg_choice;
+mp2rageSS.tag    = 'mp2rageSS';
+mp2rageSS.name   = 'MP2RAGeSS';
+mp2rageSS.help   = {
     'This extension is an implementation of https://github.com/JosePMarques/MP2RAGE-related-scripts'
     };
-mp2rage.values  = { rmbg irmbg estimateT1 };
+mp2rageSS.values  = { rmbg irmbg estimateT1 };
 % mp2rage.prog = @run_mp2rage;
 % mp2rage.vout = @vout_mp2rage;
 
@@ -339,13 +339,13 @@ end % function mp2rage_cfg_matlabbatch
 
 function out = prog_rmbg( job )
 
-fname = mp2rage_gen_out_fname( job );
+fname = mp2rageSS_gen_out_fname( job );
 
 out       = struct;
 out.files = {fname};
 
 job.fname = fname;
-mp2rage_main_remove_background(job);
+mp2rageSS_main_remove_background(job);
 
 end % function
 
@@ -365,15 +365,15 @@ end % function
 
 function out = prog_estimateT1( job )
 
-fname_T1 = mp2rage_gen_out_fname( job, 'T1' );
-fname_R1 = mp2rage_gen_out_fname( job, 'R1' );
+fname_T1 = mp2rageSS_gen_out_fname( job, 'T1' );
+fname_R1 = mp2rageSS_gen_out_fname( job, 'R1' );
 
 out       = struct;
 out.files = {fname_T1 fname_R1};
 
 job.fname_T1 = fname_T1;
 job.fname_R1 = fname_R1;
-mp2rage_main_estimate_T1(job);
+mp2rageSS_main_estimate_T1(job);
 
 end % function
 

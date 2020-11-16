@@ -1,4 +1,4 @@
-function [Intensity, T1vector, IntensityBeforeComb] = mp2rage_lookuptable( estimateT1 )
+function [Intensity, T1vector, IntensityBeforeComb] = mp2rageSS_lookuptable( estimateT1 )
 %MP2RAGE_LOOKUPTABLE function will use mp2rage_solve_bloch to build the
 %lookuptable between signal Intensity and the T1.
 %

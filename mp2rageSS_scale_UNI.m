@@ -1,4 +1,4 @@
-function [ Y, integerformat ] = mp2rage_scale_UNI( Y )
+function [ Y, integerformat ] = mp2rageSS_scale_UNI( Y )
 %MP2RAGE_SCALE_UNI converts MP2RAGE to -0.5 to 0.5 scale, if necessary
 
 if min(Y(:))>=0 && max(Y(:))>=0.51

@@ -1,4 +1,4 @@
-function mp = mp2rage_defaults
+function mp = mp2rageSS_defaults
 %MP2RAGE_DEFAULTS contains all defautl values
 %
 % See also mp2rage_get_defaults

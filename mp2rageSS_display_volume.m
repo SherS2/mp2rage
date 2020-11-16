@@ -1,4 +1,4 @@
-function V = mp2rage_display_volume(V,Y)
+function V = mp2rageSS_display_volume(V,Y)
 %MP2RAGE_DISPLAY_VOLUME will write a volume in a temporary file, and
 %display it using SPM image display.
 %

@@ -1,4 +1,4 @@
-function mp2rage_run_remove_background(rmbg)
+function mp2rageSS_run_remove_background(rmbg)
 %MP2RAGE_RUN_REMOVE_BACKGROUND Executable job that removes background noise for mp2rage UNI image.
 %
 % The core code of this function is an implementation of https://github.com/JosePMarques/MP2RAGE-related-scripts/blob/master/func/RobustCombination.m

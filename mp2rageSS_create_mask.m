@@ -1,4 +1,4 @@
-function mask_path = mp2rage_create_mask(INV1_info,INV2_info)
+function mask_path = mp2rageSS_create_mask(INV1_info,INV2_info)
 % siya Sherif
 % 05OCT2020
 % create mask from the binary
@@ -10,7 +10,7 @@ tt= 1
 Y_INV1 = double(spm_read_vols(INV1_info));
 Y_INV2 = double(spm_read_vols(INV2_info));
 
-Y_thresh = ((Y_INV1 > 40) + (Y_INV2 > 40))>0.1;
+Y_thresh = ((Y_INV1 > 40) + (Y_INV2 > 40))>0;
 
 INV1_info.fname = 'NewData.nii';  % This is where you fill in the new filename
 INV1_info.private.dat.fname = INV1_info.fname;  % This just replaces the old filename in another location within the header.

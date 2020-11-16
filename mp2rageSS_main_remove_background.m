@@ -23,30 +23,77 @@ Y_INV2 = double(spm_read_vols(V_INV2));
 V_UNI = spm_vol(rmbg.UNI{1});
 Y_UNI = double(spm_read_vols(V_UNI));
 
-% threshold , add, binarize 
-Y_thresh = double(((Y_INV1 > 30) + (Y_INV2 > 30)) > 0.1);
-% erode
-Y_erode = spm_erode(Y_thresh);
-% dilate
-Y_dilate = spm_dilate(Y_erode);
+% commenting for testing ; this part is for thersholding and smoothing  
+% % % % % % threshold , add, binarize 
+% % % % % Y_thresh = double(((Y_INV1 > 30) + (Y_INV2 > 30)) > 0);
+% % % % % % erode
+% % % % % Y_erode = spm_erode(Y_thresh);
+% % % % % % dilate
+% % % % % Y_dilate = spm_dilate(Y_erode);
+% % % % % 
+% % % % % [fold_path,~,~]  = fileparts(V_INV1.fname); 
+% % % % % 
+% % % % % V_temp  = V_INV1;
+% % % % % V_temp.fname = [fold_path '/thresh_erode_dilate.nii'];
+% % % % % V_temp.private.dat.fname = V_temp.fname; 
+% % % % % spm_write_vol(V_temp,Y_dilate); 
+% % % % % 
+% % % % % mask_name = strrep(V_temp.fname,'thresh_erode_dilate.nii','smoothed_mask.nii');
+% % % % % 
+% % % % % % smoothing
+% % % % % spm_smooth(V_temp.fname,mask_name,[rmbg.smooth rmbg.smooth rmbg.smooth]);
+% % % % % 
+% % % % %  
+% % % % % V_mask  =   spm_vol(mask_name);
+% % % % % Y_mask  =   double(spm_read_vols(V_mask));
 
-V_temp = V_INV1;
-V_temp.fname = strrep(V_temp.fname,'inv-1_MP2RAGE.nii','thresh_erode_dilate.nii');
-V_temp.private.dat.fname = V_temp.fname; 
-spm_write_vol(V_temp,Y_erode); 
 
-mask_name = strrep(V_temp.fname,'thresh_erode_dilate.nii','mask.nii');
+% ---------------------------------------------------------------------
+% % % % % for using the mask from the multi channel segmentation 
+% % % % % get the path to the multi channel seg folder  
+% % % % path_multi_seg = '/media/siya/CRC_DATA_ss/mp2rage_noise_ATAG/middle_age/MultiChannel_seg/';
+% % % % 
+% % % % % get the subjname 
+% % % % [~,ff,~]=fileparts(V_INV1.fname);
+% % % % 
+% % % % fl_path = dir([path_multi_seg ff(1:4) '/' ff(1:4) '*_mask_from_seg.nii' ]);
+% % % % 
+% % % % V_mask  =   spm_vol([fl_path.folder '/' fl_path.name]);
+% % % % Y_mask  =   double(spm_read_vols(V_mask));
 
-% smoothing
-spm_smooth(V_temp.fname,mask_name,[rmbg.smooth rmbg.smooth rmbg.smooth]);
- 
-V_mask  =   spm_vol(mask_name);
-Y_mask  =   double(spm_read_vols(V_mask));
+
+% PART 3
+% path_multi_seg = '/media/siya/CRC_DATA_ss/mp2rage_noise_ATAG/middle_age/MultiChannel_seg/';
+path_multi_seg = '/media/siya/CRC_DATA_ss/mp2rage_noise_ATAG/middle_age/MultiChannel_seg_eTPM_moreGauss/';
+
+% get the subjname 
+[~,ff,~]=fileparts(V_INV1.fname);
+c1 = dir([path_multi_seg ff(1:4) '/c1' ff(1:4) '*'  ]);
+c2 = dir([path_multi_seg ff(1:4) '/c2' ff(1:4) '*'  ]);
+c3 = dir([path_multi_seg ff(1:4) '/c3' ff(1:4) '*'  ]);
+
+v_c1 = spm_vol([c1.folder '/' c1.name]);
+v_c2 = spm_vol([c2.folder '/' c2.name]);
+v_c3 = spm_vol([c3.folder '/' c3.name]);
+
+Y_c1  =   double(spm_read_vols(v_c1));
+Y_c2  =   double(spm_read_vols(v_c2));
+Y_c3  =   double(spm_read_vols(v_c3));
+
+Y_mask1  =  double(Y_c1 + Y_c2 + Y_c3 );
+Y_mask2  =  1-Y_mask1;
+% ---------------------------------------------------------------------
 
 
 %% Prepare some local functions
 
-MP2RAGErobustfunc = @(INV1,INV2,beta,mask) (conj(INV1).*INV2-(beta.*(1-mask)))./(INV1.^2+INV2.^2+2*(beta.*(1-mask)));
+% MP2RAGErobustfunc = @(INV1,INV2,beta,mask) (conj(INV1).*INV2-(beta.*(1-mask)))./(INV1.^2+INV2.^2+2*(beta.*(1-mask)));
+
+%mask c4 c5 c6 
+MP2RAGErobustfunc = @(INV1,INV2,beta,mask) (conj(INV1).*INV2-[(beta.*(mask1)) + (beta.*(mask1))])./...
+    (INV1.^2+INV2.^2 + 2 * [(beta.*(mask)) - (beta.*(mask))]);
+
+
 % MP2RAGErobustfunc = @(INV1,INV2,beta,maskSS) (conj(INV1).*INV2-beta)./(INV1.^2+INV2.^2+2*beta);
 rootsquares_pos   = @(a,b,c)          (-b+sqrt(b.^2 -4 *a.*c))./(2*a);
 rootsquares_neg   = @(a,b,c)          (-b-sqrt(b.^2 -4 *a.*c))./(2*a);
@@ -54,7 +101,7 @@ rootsquares_neg   = @(a,b,c)          (-b-sqrt(b.^2 -4 *a.*c))./(2*a);
 
 %% Converts MP2RAGE to -0.5 to 0.5 scale
 
-[ Y_UNI, integerformat ] = mp2rage_scale_UNI( Y_UNI );
+[ Y_UNI, integerformat ] = mp2rageSS_scale_UNI( Y_UNI );
 
 
 %% Computes correct INV1 dataset
@@ -89,7 +136,7 @@ Y_T1w = MP2RAGErobustfunc(Y_INV1, Y_INV2, noiselevel.^2,Y_mask);
 
 %% Convert the final image to uint (if necessary)
 
-Y_T1w = mp2rage_unscale_UNI( Y_T1w, integerformat );
+Y_T1w = mp2rageSS_unscale_UNI( Y_T1w, integerformat );
 
 
 %% Save volume

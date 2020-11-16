@@ -1,4 +1,4 @@
-function output = mp2rage_matlabbatch_job_output( job_name, display_name )
+function output = mp2rageSS_matlabbatch_job_output( job_name, display_name )
 
 if nargin < 2
     display_name = '';
@@ -16,7 +16,7 @@ prefix.help    = {
     };
 prefix.strtype = 's'; % string
 prefix.num     = [1 Inf];
-prefix.def     = @(val) mp2rage_get_defaults([job_name '.prefix'], val{:});
+prefix.def     = @(val) mp2rageSS_get_defaults([job_name '.prefix'], val{:});
 
 %--------------------------------------------------------------------------
 % filename
@@ -30,7 +30,7 @@ filename.help    = {
     };
 filename.strtype = 's';
 filename.num     = [1 Inf];
-filename.def     = @(val) mp2rage_get_defaults([job_name '.filename'], val{:});
+filename.def     = @(val) mp2rageSS_get_defaults([job_name '.filename'], val{:});
 
 %--------------------------------------------------------------------------
 % directory
@@ -83,7 +83,7 @@ file.help    = {
     };
 file.strtype = 's';
 file.num     = [1 Inf];
-file.def     = @(val) mp2rage_get_defaults([job_name '.filename'], val{:});
+file.def     = @(val) mp2rageSS_get_defaults([job_name '.filename'], val{:});
 
 %--------------------------------------------------------------------------
 % output

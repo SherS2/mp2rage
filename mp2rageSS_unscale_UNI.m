@@ -1,4 +1,4 @@
-function Y = mp2rage_unscale_UNI( Y, integerformat )
+function Y = mp2rageSS_unscale_UNI( Y, integerformat )
 %MP2RAGE_UNSCALE_UNI converts back MP2RAGE from -0.5 to 0.5 scale to 0 4095, if necessary
 
 if integerformat
