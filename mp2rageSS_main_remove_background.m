@@ -90,8 +90,8 @@ Y_mask2  =  1-Y_mask1;
 % MP2RAGErobustfunc = @(INV1,INV2,beta,mask) (conj(INV1).*INV2-(beta.*(1-mask)))./(INV1.^2+INV2.^2+2*(beta.*(1-mask)));
 
 %mask c4 c5 c6 
-MP2RAGErobustfunc = @(INV1,INV2,beta,mask) (conj(INV1).*INV2-[(beta.*(mask1)) + (beta.*(mask1))])./...
-    (INV1.^2+INV2.^2 + 2 * [(beta.*(mask)) - (beta.*(mask))]);
+MP2RAGErobustfunc = @(INV1,INV2,beta1,beta2,mask1,mask2) (conj(INV1).*INV2-( (beta1.*(mask1)) + (beta2.*(mask2)) ) )  ./...
+    (INV1.^2+INV2.^2 + 2 * ( (beta1.*(mask1)) + (beta2.*(mask2)) ) );
 
 
 % MP2RAGErobustfunc = @(INV1,INV2,beta,maskSS) (conj(INV1).*INV2-beta)./(INV1.^2+INV2.^2+2*beta);
@@ -129,9 +129,10 @@ Y_INV1( abs(Y_INV1-INV1pos)<=abs(Y_INV1-INV1neg) ) = INV1pos( abs(Y_INV1-INV1pos
 % measure"
 
 reg2noise = @(reg,INV2) reg * mean(mean(mean( INV2(1:end,end-10:end,end-10:end) )));
-noiselevel = reg2noise(rmbg.regularization,Y_INV2);
+noiselevel_1 = reg2noise(rmbg.regularization,Y_INV2);
+noiselevel_2 = reg2noise(rmbg.smooth,Y_INV2);
 
-Y_T1w = MP2RAGErobustfunc(Y_INV1, Y_INV2, noiselevel.^2,Y_mask);
+Y_T1w = MP2RAGErobustfunc(Y_INV1, Y_INV2,noiselevel_1.^2,noiselevel_2.^2,Y_mask1,Y_mask2);
 
 
 %% Convert the final image to uint (if necessary)
